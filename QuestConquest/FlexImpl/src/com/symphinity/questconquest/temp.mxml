@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+        backgroundColor="0xFFFFFF" applicationComplete="init();" viewSourceURL="srcview/index.html">
+    <mx:Script>
+        <![CDATA[
+            import mx.controls.Alert;
+            import mx.formatters.NumberFormatter;
+            import mx.graphics.codec.PNGEncoder;
+           
+            // encoder to create file to save
+            private var png:PNGEncoder = new PNGEncoder();
+           
+            // allowed file types
+            private var fileTypes:FileFilter = new FileFilter("Image", "*.jpg;*.jpeg;*;*.gif;*.png;*");
+               
+            // FileReference classes for upload and download
+            [Bindable]
+            private var loadFileRef:FileReference = new FileReference();
+            private var saveFileRef:FileReference = new FileReference();
+           
+            // filter objects
+            [Embed("filters/pixelate.pbj", mimeType="application/octet-stream")]
+            private var PixelateFilterClass:Class;
+           
+            [Embed("filters/SmartNormalMap.pbj", mimeType="application/octet-stream")]
+            private var SmartNormalMapFilterClass:Class;
+               
+            [Embed("filters/twirl.pbj", mimeType="application/octet-stream")]
+            private var TwirlFilterClass:Class;
+           
+            [Embed("filters/ZoomBlurFocus.pbj", mimeType="application/octet-stream")]
+            private var ZoomBlurFocusClass:Class;
+           
+            // Shaders
+            private var pixelateShader:Shader;
+            private var smartNormalMapShader:Shader;
+            private var twirlShader:Shader;
+            private var zoomBlurFocusShader:Shader;
+           
+            // ShaderFilters
+            private var pixelateFilter:ShaderFilter;
+            private var smartNormalMapFilter:ShaderFilter;
+            private var twirlFilter:ShaderFilter;
+            private var zoomBlurFocusFilter:ShaderFilter;
+           
+            // format file size
+            private var numberFormatter:NumberFormatter = new NumberFormatter();
+           
+            // timers to track upload time
+            private var startTime:Date;
+            private var endTime:Date;
+           
+            // call on applicationComplete
+            private function init():void {
+               
+                // add event listeners for upload
+                loadFileRef.addEventListener(Event.SELECT, fileSelected);
+                loadFileRef.addEventListener(ProgressEvent.PROGRESS, loadProgress);
+                loadFileRef.addEventListener(Event.COMPLETE, loadCompleted);
+                loadFileRef.addEventListener(IOErrorEvent.IO_ERROR, ioerror);
+               
+                // create new shaders and filters
+                pixelateShader = new Shader(new PixelateFilterClass() as ByteArray);
+                pixelateFilter = new ShaderFilter(pixelateShader);
+                smartNormalMapShader = new Shader(new SmartNormalMapFilterClass() as ByteArray);
+                smartNormalMapFilter = new ShaderFilter(smartNormalMapShader);
+                twirlShader = new Shader(new TwirlFilterClass() as ByteArray);
+                twirlFilter = new ShaderFilter(twirlShader);
+                zoomBlurFocusShader = new Shader(new ZoomBlurFocusClass() as ByteArray);
+                zoomBlurFocusFilter = new ShaderFilter(zoomBlurFocusShader);
+            }
+           
+            // launch the file system browse dialog and filter file types
+            private function browseAndUpload():void {
+                log.text="";
+                image.source=null;
+                removeFilters();
+                loadFileRef.browse([fileTypes]);
+            }
+           
+            // called after a file has been selected within the file system browser
+            private function fileSelected(evt:Event):void {
+                log.text += "file size: " + numberFormatter.format(loadFileRef.size) +" bytes\n";
+                log.text += "file name: " + loadFileRef.name +"\n";
+                startTime = new Date();
+                loadFileRef.load();
+            }
+
+            // load progress captured for progress bar
+            private function loadProgress(evt:ProgressEvent):void {
+                progressBar.visible = true;
+                progressBar.setProgress( Number(evt.bytesLoaded / evt.bytesTotal), 1 );
+                progressBar.label = numberFormatter.format(evt.bytesLoaded) + " of " +
+                                    numberFormatter.format(evt.bytesTotal) + " bytes uploaded";
+            }
+
+            // load has completed
+            private function loadCompleted(evt:Event):void {
+                image.source = loadFileRef.data;
+                progressBar.setProgress(1,1);
+                progressBar.visible = false;
+                endTime = new Date();
+                log.text += "upload time: " + (endTime.time - startTime.time) + " milliseconds";
+            }
+
+            // load error
+            public function ioerror(evt:IOErrorEvent):void{
+                Alert.show(evt.text,"Error");
+            }
+           
+            // capture image and save back to client
+            private function capture():void{
+                var bitmapData:BitmapData = new BitmapData(image.width, image.height);
+                bitmapData.draw(image);
+                var ba:ByteArray = png.encode(bitmapData);
+                // split off the original extension and replace with png
+                var ext:String = loadFileRef.name.split(".").pop();
+                saveFileRef.save(ba,loadFileRef.name.replace(ext,"png"));
+            }
+           
+            // add PixelBender filter
+            private function addFilter(filter:ShaderFilter):void{
+                var filters:Array = image.filters;
+                filters.push(filter);
+                image.filters = filters;
+            }
+           
+            // remove all filters
+            private function removeFilters():void{
+                image.filters = null;
+            }
+           
+            // return true when image is available
+            private function buttonsEnabled(bytes:ByteArray):Boolean{
+                if(bytes.length)return true;
+                return false;
+            }
+        ]]>
+    </mx:Script>
+    <mx:HBox>
+        <mx:Button label="Load file" click="browseAndUpload()"/>
+        <mx:Button label="Save file" click="capture()"
+            enabled="{buttonsEnabled(loadFileRef.data)}"/>
+        <mx:Button label="Pixelate" click="addFilter(pixelateFilter)"
+            enabled="{buttonsEnabled(loadFileRef.data)}"/>
+        <mx:Button label="SmartNormalMap" click="addFilter(smartNormalMapFilter)"
+            enabled="{buttonsEnabled(loadFileRef.data)}"/>
+        <mx:Button label="Twirl" click="addFilter(twirlFilter)"
+            enabled="{buttonsEnabled(loadFileRef.data)}"/>  
+        <mx:Button label="ZoomBlurFocus" click="addFilter(zoomBlurFocusFilter)"
+            enabled="{buttonsEnabled(loadFileRef.data)}"/>
+        <mx:Button label="Remove All Filters" click="removeFilters()"
+            enabled="{buttonsEnabled(loadFileRef.data)}"/>
+    </mx:HBox>
+    <mx:TextArea id="log" width="700" height="60" />
+    <mx:ProgressBar id="progressBar" visible="false" mode="manual"/>
+    <mx:Image id="image" maxHeight="600" maxWidth="800"/>
+</mx:Application>

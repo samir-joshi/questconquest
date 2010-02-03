@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  xmlns:author="com.symphinity.questconquest.view.author.*"
+		  xmlns:trail="com.symphinity.questconquest.view.author.trail.*" creationComplete="OnCreationComplete();" 
+		    >
+	<mx:Script>
+	<![CDATA[
+		import com.symphinity.questconquest.model.isometric.DrawnIsoTile;
+		import com.symphinity.questconquest.model.isometric.Point3D;
+		import com.symphinity.questconquest.model.isometric.ExtendedUICompoent;
+
+		import flash.events.MouseEvent;
+		import mx.containers.Canvas;
+		import mx.core.UIComponent;
+		
+		private var worldCreator:WorldCreator;
+		
+		
+		
+		protected function OnCreationComplete(): void {
+			
+			worldCreator = new WorldCreator();
+			addChild(worldCreator);
+			worldCreator.setupInteractivity();
+			worldCreator.setPosition( width, height);
+			
+			
+			addEventListener(Event.RESIZE, resizeHandler);  			
+
+			//addEventListener(MouseEvent.CLICK, OnMouseClick);
+			//addEventListener(MouseEvent.RIGHT_CLICK, OnRightMouseClick);			
+			
+		}
+		
+		private function resizeHandler(event:Event):void {  
+			worldCreator.setPosition( width, height);
+		}
+		
+		public function zoomIn():void {
+			worldCreator.scaleX *= 2;
+			worldCreator.scaleY *= 2;
+			this.invalidateSize();
+		}
+		
+		public function zoomOut():void {
+			worldCreator.scaleX /= 2;
+			worldCreator.scaleY /= 2;
+		}
+		
+		
+		
+	]]>
+	</mx:Script>
+
+
+
+</mx:Canvas>

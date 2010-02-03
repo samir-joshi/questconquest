@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" >
+	<mx:Script>
+		<![CDATA[
+		import com.symphinity.questconquest.model.challange.Challange;
+		import com.symphinity.questconquest.model.challange.ChallangeType;
+		import com.symphinity.questconquest.model.challange.TrueOrFalseChallangeType;
+		
+		[Bindable]
+		public var challangeModel: Challange;
+		
+		public function setTypeSpecificData(data: ChallangeType):void {
+			// To be overridden in type specific classes			
+		}
+		
+		]]>
+	</mx:Script>
+</mx:VBox>

@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  xmlns:author="com.symphinity.questconquest.view.author.*"
+		  xmlns:challange="com.symphinity.questconquest.view.author.challange.*"
+	title="Chalange Details" status="" 
+    paddingTop="0" paddingRight="0" paddingLeft="0" paddingBottom="0" creationComplete="OnCreationComplete();">
+	<mx:Script>
+	<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.core.Container;
+		import mx.core.UIComponent;
+		
+		import com.symphinity.questconquest.controller.author.config.ChallangeTypeConfiguration;
+			
+		import com.symphinity.questconquest.model.challange.Challange;
+		import com.symphinity.questconquest.model.challange.ChallangeType;
+		
+		
+		[Bindable]
+		public var challangeTypeModel: ChallangeType;		
+		
+		
+		[Bindable]
+		public var challangeModel: Challange;
+		
+		protected function OnCreationComplete():void {
+			var configuration: ChallangeTypeConfiguration = ChallangeTypeConfiguration.getInstance();
+			var viewList: ArrayCollection = configuration.getChallangeTypeViewList();
+			var view: UIComponent;
+			for each ( view in viewList ) {
+				challangeTypeViewStack.addChild(view);
+			}
+		
+		}		
+		
+		protected function getViewForSelection(challangeModel: Challange): Container {
+			if (challangeModel !== null && challangeModel.challangeType != null) {
+				var challangeType: ChallangeType = challangeModel.challangeType;
+				var configuration: ChallangeTypeConfiguration = ChallangeTypeConfiguration.getInstance();
+				var view:TypeSpecificChallangeView = configuration.getViewForChallangeType(challangeType)
+				if (view != null) {
+					view.challangeModel = challangeModel ;
+					view.setTypeSpecificData(challangeModel.challangeType);
+					return view;
+				}else {
+					trace(" View for the model is null");					
+					return defaultView;
+				}
+				
+			}else {
+				trace(" Challange model is null");
+				return defaultView;
+			}
+		}		
+		
+		/*
+		private function activateChallangeSpecificUI() : void {
+			challangeTypeSpecificOptions.selectedIndex = challangeType.selectedIndex ;
+			challangeTypeSpecificOptions.invalidateDisplayList();
+		}
+		*/
+	]]>
+	</mx:Script>
+
+	<mx:ViewStack id="challangeTypeViewStack" width="100%" height="100%"  selectedChild="{getViewForSelection(challangeModel)}">
+		<mx:Panel id="defaultView" width="100%" height="100%" >
+			<mx:Text text=" Challange Type is not yet selected" />
+		</mx:Panel>
+	</mx:ViewStack>
+
+</mx:Panel>

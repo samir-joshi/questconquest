@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<common:TypeSpecificChallangeView xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  xmlns:author="com.symphinity.questconquest.view.author.challange.*"
+		  xmlns:common="com.symphinity.questconquest.view.common.challange.*"
+		paddingTop="0" paddingRight="0" paddingLeft="0" paddingBottom="0">
+	<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;	
+		import mx.controls.RadioButton;
+		import mx.collections.ArrayCollection;
+		import mx.events.DataGridEvent;		
+		import mx.events.DataGridEventReason;		
+		
+		import com.symphinity.questconquest.model.challange.Challange;
+		import com.symphinity.questconquest.model.challange.Option;
+		import com.symphinity.questconquest.model.challange.ChallangeType;
+		import com.symphinity.questconquest.model.challange.MultipleChoiceChallangeType;		
+		
+		[Bindable]
+		public var optionModel: MultipleChoiceChallangeType;
+		
+		protected function removeOption(): void {
+			var item: Object = optionsGrid.selectedItem;
+			if (item != null) {
+				var itemIndex: int = optionModel.getOptions().getItemIndex(item);
+				if (itemIndex != -1) {
+					optionModel.getOptions().removeItemAt(itemIndex);
+				}else {
+					trace(" Selected item for deletion not found in the options collection" );
+				}
+				
+			}else {
+				Alert.show("Please select an option row to be removed.");
+			}
+		}
+		
+		protected function addOption(): void {
+			var option: Option = new Option();
+			option.description = "Description"
+			option.isCorrect = false;
+			optionModel.addOption( option);
+		}
+
+
+		override public  function setTypeSpecificData(data: ChallangeType): void {
+			if (data is MultipleChoiceChallangeType) {
+				optionModel = MultipleChoiceChallangeType(data);
+			}else {
+				trace(" Attempt to set incorrect data model for challange type multi choice - " + data);
+			}
+		}	
+				
+		protected function ensureSingleChoice(event: DataGridEvent): void {
+			optionModel.traceOptions();
+		}		
+
+	]]>
+	</mx:Script>
+
+	<author:CommonContentView challangeModel="{challangeModel}"  width="100%" height="100%" />
+	
+	<mx:HRule width="100%" />	
+		
+	<mx:Form id="multiChoiceChallangeForm" width="100%" height="100%">
+		<mx:FormItem label="Options" xmlns:mx="http://www.adobe.com/2006/mxml">
+			<mx:VBox>
+				<mx:DataGrid id="optionsGrid"  editable="true" 
+					dataProvider="{optionModel.getOptions()}" itemEditEnd="ensureSingleChoice(event);">
+					<mx:columns>			
+						<mx:DataGridColumn headerText="Options" dataField="description" />
+						<mx:DataGridColumn headerText="Answer" dataField="isCorrect" itemRenderer="mx.controls.CheckBox" rendererIsEditor="true"
+							editorDataField="selected" >		
+						</mx:DataGridColumn>	
+					</mx:columns>				
+				</mx:DataGrid>
+				<mx:HBox>
+					<mx:Button id="addOptionButton" label="Add option" click="addOption()"/>
+					<mx:Button id="removeOptionButton" label="Remove option" click="removeOption()" />							
+				</mx:HBox>
+			</mx:VBox>	
+		</mx:FormItem>
+	</mx:Form>
+</common:TypeSpecificChallangeView>
+

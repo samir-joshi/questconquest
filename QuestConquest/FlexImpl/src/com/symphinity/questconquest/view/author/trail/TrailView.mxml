@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  xmlns:author="com.symphinity.questconquest.view.author.*"
+		  xmlns:trail="com.symphinity.questconquest.view.author.trail.*"
+	title="Trail Details" status="" 
+    paddingTop="0" paddingRight="0" paddingLeft="0" paddingBottom="0" creationComplete="OnCreationComplete();">
+	<mx:Script>
+	<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.core.Container;
+		import mx.core.UIComponent;
+		
+		import com.symphinity.questconquest.model.trail.Trail;
+			
+		
+		
+		[Bindable]
+		public var trailModel: Trail;
+		
+		protected function OnCreationComplete():void {
+		
+		}		
+		
+	]]>
+	</mx:Script>
+
+	<trail:TrailCanvas width="100%" height="100%" />
+	
+
+</mx:Panel>

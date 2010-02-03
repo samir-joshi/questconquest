@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+		import flash.media.Sound;
+		import flash.net.URLRequest;
+		import mx.controls.Alert;
+		
+		protected var urlPath:String;
+		
+		protected var soundControl:Sound;
+		
+		public function createChilder():void {
+			//soundControl = new Sound();
+		}
+		
+		public function set url( argUrl:String): void {
+			this.urlPath = argUrl;
+			trace("Set url to: " + url);			
+			if (url != null) {
+				soundControl = new Sound();
+				soundControl.load(new URLRequest(urlPath));
+
+			}
+		}
+		
+		public function get url (): String {
+			return this.urlPath;
+		}
+		
+		protected function play():void {
+			if (soundControl != null) {
+				trace(" About to play, sound loaded from this url : " + soundControl.url );
+				soundControl.play()
+			}else {
+				trace(" AudioPlayer.play() invoked but sound control is null.");							
+			}
+			
+		}
+		
+		]]>
+	</mx:Script>
+	
+	<!-- <mx:ProgressBar id="progressBar" /> -->
+	<mx:HBox>
+		<mx:Button id="playButton" label="Play" click="play();" />
+	</mx:HBox>
+</mx:VBox>

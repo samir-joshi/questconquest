@@ -1,0 +1,3 @@
+The seed code for the isometry world is based on work
+of Keith Peters and Jobs Makar, as published in their books-
+Advanced Animation and Flash Games DeMystified.

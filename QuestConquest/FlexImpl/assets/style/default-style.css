@@ -1,0 +1,29 @@
+*
+* Class Selectors.
+*
+* http://webdesign.about.com/od/cssselectors/qt/cssselclass.htm
+*/
+
+
+.basic
+{
+background-color: #EEEEEE;
+color: #006666;
+font-size: 12;
+}
+.header
+{
+font-weight: bold;
+color: #0000CC;
+font-size: 14;
+}
+.state
+{
+font-weight: bold;
+}
+.title
+{
+font-weight: bold;
+font-size: 18;
+color: #000033;
+}

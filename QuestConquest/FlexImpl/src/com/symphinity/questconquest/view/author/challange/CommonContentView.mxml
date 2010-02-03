@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  xmlns:commonContentView="com.symphinity.questconquest.view.author.common.*"
+    paddingTop="0" paddingRight="0" paddingLeft="0" paddingBottom="0">
+	<mx:Script>
+	<![CDATA[
+		import mx.core.UIComponent;
+		import mx.managers.DragManager;		
+		
+		import com.symphinity.questconquest.model.challange.Challange;
+		
+		[Bindable]
+		public var challangeModel: Challange;
+		
+
+	]]>
+	</mx:Script>
+	<mx:Binding source="narrativeText.text" destination="challangeModel.text" />
+	<mx:Binding source="topicText.text" destination="challangeModel.topic" />	
+	
+	<mx:Form id="challangeCreationForm" width="100%" height="100%">
+		<mx:FormHeading fontSize="10"  label="Enter details of challange:" paddingTop="0" />
+
+		<mx:FormItem label="Topic">
+			<mx:TextInput id="topicText" text="{challangeModel.topic}" />
+		</mx:FormItem>		
+		
+		<mx:FormItem label="Narration">
+			<mx:TabNavigator id="tabNav" minHeight="250" minWidth="300" >
+				<!-- Define each panel using a VBox container. -->
+				<mx:VBox label="Text" width="100%" height="100%">
+					<mx:TextArea id="narrativeText"  text="{challangeModel.text}" width="100%" height="100%"/>		
+				</mx:VBox>					
+				<commonContentView:ImageFilePicker id="imageChooser" label="Image" width="100%" height="100%" />
+				<commonContentView:AudioFilePicker id="audioChooser" label="Audio" width="100%" height="100%" />				
+				<commonContentView:VideoFilePicker id="videoChooser" label="Video" width="100%" height="100%" />								
+
+			</mx:TabNavigator>				
+		</mx:FormItem>
+		
+	</mx:Form>
+</mx:VBox>

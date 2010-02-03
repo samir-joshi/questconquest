@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:VideoDisplay id="videoDisplay" autoPlay="false" width="100%" height="100%" />
+	<!-- <mx:ProgressBar id="progressBar" /> -->
+	<mx:HBox>
+		<mx:Button id="playButton" label="Play" click="videoDisplay.play();" />
+		<mx:Button id="pauseButton" label="Pause" click="videoDisplay.pause();" />
+		<mx:Button id="stopButton" label="Stop" click="videoDisplay.stop();" />		
+	</mx:HBox>
+</mx:VBox>

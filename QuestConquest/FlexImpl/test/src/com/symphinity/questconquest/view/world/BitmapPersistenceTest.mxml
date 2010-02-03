@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:qc="com.symphinity.questconquest.view.world.*" >
+	<mx:Script>
+		<![CDATA[
+			
+		public function save(): void
+		{
+			dataPersister.setTileInfo();
+			dataPersister.save();
+		}
+		
+		public function open(): void
+		{
+			dataPersister.open();
+		}
+		
+		public function load(): void
+		{
+			dataPersister.loadImage();
+		}
+
+		
+		]]>
+	</mx:Script>
+	<mx:VBox>
+		<qc:BitmapDataPersister id="dataPersister" height="400" />
+		<mx:Button id="saveButton" label="Save" click="save()" />
+		<mx:Button id="openButton" label="Open" click="open()" />
+		<mx:Button id="loadButton" label="Load" click="load()" />
+	</mx:VBox>
+	
+</mx:Application>

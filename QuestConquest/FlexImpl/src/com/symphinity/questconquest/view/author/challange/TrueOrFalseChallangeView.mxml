@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<common:TypeSpecificChallangeView xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  xmlns:author="com.symphinity.questconquest.view.author.challange.*"
+		  xmlns:common="com.symphinity.questconquest.view.common.challange.*"
+    paddingTop="0" paddingRight="0" paddingLeft="0" paddingBottom="0">
+		
+	<mx:Script>
+		<![CDATA[
+		import com.symphinity.questconquest.model.challange.TrueOrFalseChallangeType;
+		import com.symphinity.questconquest.model.challange.ChallangeType;
+		
+		[Bindable]
+		protected var challangeTypeModel: TrueOrFalseChallangeType;
+
+		override public  function setTypeSpecificData(data: ChallangeType): void {
+			if (data is TrueOrFalseChallangeType) {
+				challangeTypeModel = TrueOrFalseChallangeType(data);
+			}else {
+				trace(" Attempt to set incorrect data model for challange type true/false - " + data);
+			}
+		}		
+		
+		]]>
+	</mx:Script>	
+	<mx:Binding source="trueButton.selected" destination="challangeTypeModel.answer" />
+	
+	<author:CommonContentView challangeModel="{challangeModel}"  width="100%" height="100%" />
+	
+	<mx:HRule width="100%" />	
+		
+	<mx:Form id="trueOrFalseChallangeForm" width="100%" height="100%">
+		<mx:FormItem label="Options" xmlns:mx="http://www.adobe.com/2006/mxml">
+			<mx:RadioButtonGroup id="answer" />
+			<mx:RadioButton id="trueButton" label="True"  groupName="answer"  selected="{challangeTypeModel.answer}"  />
+			<mx:RadioButton label="False" groupName="answer" selected="{! challangeTypeModel.answer}" />		
+		</mx:FormItem>	
+	</mx:Form>
+</common:TypeSpecificChallangeView>
+
+
+

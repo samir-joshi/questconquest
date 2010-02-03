@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<qa:BaseFilePicker	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:qa="com.symphinity.questconquest.view.author.common.*">
+	<mx:Script>
+	<![CDATA[
+	import mx.controls.Image;
+
+	override protected function updatePreviewer(fileUrl:String):void {
+		imagePreview.source = fileUrl;
+		imagePreview.invalidateDisplayList();
+	}		
+	]]>
+	</mx:Script>	
+	<qa:previewControl>
+		<mx:Image id="imagePreview" width="100%" height="100%" />
+	</qa:previewControl>
+</qa:BaseFilePicker>

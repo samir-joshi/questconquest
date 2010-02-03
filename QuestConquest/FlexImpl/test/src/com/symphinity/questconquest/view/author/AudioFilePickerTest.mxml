@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:qa="com.symphinity.questconquest.view.author.*">
+	<qa:AudioFilePicker id="audioPlayer"  width="300" height="300" />
+</mx:Application>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<qa:BaseFilePicker	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:qa="com.symphinity.questconquest.view.author.common.*"
+					xmlns:qc="com.symphinity.questconquest.view.common.*">
+	<mx:Script>
+	<![CDATA[
+	import mx.controls.Image;
+
+	override protected function updatePreviewer(fileUrl:String):void {
+		videoPreview.videoDisplay.source = fileUrl;
+		videoPreview.videoDisplay.invalidateDisplayList();
+	}		
+	]]>
+	</mx:Script>	
+	<qa:previewControl>
+		<qc:VideoViewer id="videoPreview" width="100%" height="100%" />
+	</qa:previewControl>
+</qa:BaseFilePicker>

@@ -1,0 +1,29 @@
+﻿package com.symphinity.questconquest.model.isometric
+{
+	
+	import flash.display.Bitmap;
+	
+	/**
+	 * ...
+	 * @author Samir Joshi
+	 */
+	public class InteractiveGraphicsTile extends GraphicTile
+	{
+		
+		public function InteractiveGraphicsTile(size:Number, bitmap:Bitmap, xoffset:Number, yoffset:Number):void 
+		{
+			super(size, bitmap, xoffset, yoffset);
+		}
+		
+		public function interact(): void {
+			trace(" Hi" );
+		}
+		
+		override public function toString():String
+		{
+			return "[InteractiveGraphicsTile (x:" + _position.x + ", y:" + _position.y + ", z:" + _position.z + ")]";
+		}		
+		
+	}
+	
+}

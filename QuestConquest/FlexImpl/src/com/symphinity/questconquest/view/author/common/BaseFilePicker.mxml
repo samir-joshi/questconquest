@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		initialize="OnInitialize();">
+	<mx:Script>
+	<![CDATA[
+		import mx.managers.DragManager;
+		import mx.core.UIComponent;
+		
+		public var fileUrl: String;
+		
+		[Bindable]
+		protected var previewControl:UIComponent;
+		
+		protected function unpickFile():void {
+			fileUrl = null;
+			updatePreviewer	(fileUrl);
+			currentState = "";			
+		}
+		
+		/**
+		 * This function must be overriddne by extending class.
+		 */
+		protected function updatePreviewer(fileUrl:String):void {
+			throw new IllegalOperationError("The method updatePreviewer() is not implemented - must be implemented in descendent class.");
+		}
+		
+		private function OnInitialize():void {
+			previewContainer.addChild(previewControl);
+			previewControl.setVisible(false);
+		}
+		
+				
+	]]>
+	</mx:Script>
+	
+	<mx:nativeDragEnter>
+		// Event handler for when something is dragged over to the WindowedApplication
+		
+		// Only allow files to be dragged in
+		if (event.clipboard.hasFormat(ClipboardFormats.FILE_LIST_FORMAT))
+		{
+			var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+			
+			// only allow a single file to be dragged in
+			if (files.length == 1)
+			{
+				DragManager.acceptDragDrop(event.currentTarget as VBox);
+				setStyle("backgroundColor", 0xccccff);
+			}
+		}
+	</mx:nativeDragEnter>
+    <mx:nativeDragExit>
+		// Event handler for when the drag leaves the WindowedApplication
+		setStyle("backgroundColor", 0xffffff);
+    </mx:nativeDragExit>
+    <mx:nativeDragDrop>
+		// Event handler for when a dragged item is dropped on the WindowedApplication
+		var arr:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+		fileUrl = (arr[0] as File).url;
+		updatePreviewer	(fileUrl);
+		setStyle("backgroundColor", 0xffffff);	
+		currentState = "UnPickable";
+    </mx:nativeDragDrop>
+	
+  <!-- The Application class states property defines the view states.-->
+    <mx:states>
+        <mx:State name="UnPickable">
+            <!-- Add a TextInput control to the form. -->           
+            <mx:AddChild relativeTo="{previewContainer}" 
+                position="before">
+				<mx:Button id="addOrRemoveButton" label="Remove" click="unpickFile();" />
+			</mx:AddChild>
+			<mx:SetProperty target="{previewControl}" name="visible" value="true" />
+            <mx:RemoveChild target="{dragInstructionText}"/>
+        </mx:State>
+    </mx:states>
+	
+	<mx:Canvas id="previewContainer" width="100%" height="100%">
+		<mx:Text id="dragInstructionText" verticalCenter="0" horizontalCenter="0" text="{ 'Drag the ' + label + ' here'}" />
+	</mx:Canvas>
+
+	
+</mx:VBox>

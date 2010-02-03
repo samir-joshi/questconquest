@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:qc="com.symphinity.questconquest.view.common.*">
+	<qc:AudioPlayer id="audioPlayer" url="KrishiKajJaneNa.mp3" />
+</mx:Application>

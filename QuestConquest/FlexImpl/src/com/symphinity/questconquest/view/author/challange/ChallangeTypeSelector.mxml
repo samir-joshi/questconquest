@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+    title="Challange Selection" >
+
+    <mx:Script>
+        <![CDATA[       
+            import mx.managers.PopUpManager;
+            import mx.controls.Text;
+			
+			import com.adobe.cairngorm.control.CairngormEvent;
+			
+			import com.symphinity.questconquest.controller.author.config.ChallangeTypeConfiguration;
+			import com.symphinity.questconquest.controller.author.event.QEvent;
+			import com.symphinity.questconquest.model.challange.Challange;
+			import com.symphinity.questconquest.model.challange.ChallangeType;
+           
+            // A reference to the model in which to put the result.
+            public var challange:Challange;
+           
+            // Event handler for the OK button.
+            protected function returnSelection():void {
+				var event:CairngormEvent = new CairngormEvent( QEvent.EVENT_NEW_CHALLANGE);
+				event.data = challangeTypeList.selectedItem.instance;
+				event.dispatch();
+                PopUpManager.removePopUp(this);
+            }
+				
+        ]]>
+    </mx:Script>
+
+	<mx:Form>
+		<mx:FormHeading  label="Select Challange Type" />
+		<mx:FormItem label="Challange Type">
+			<mx:List id="challangeTypeList"  dataProvider="{ChallangeTypeConfiguration.getInstance().getConfiguration()}" />
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:Button label="OK" click="returnSelection();"/>	
+		</mx:FormItem>
+	</mx:Form>
+
+</mx:TitleWindow>

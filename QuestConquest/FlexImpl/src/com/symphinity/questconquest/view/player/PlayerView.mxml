@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:challange="com.symphinity.questconquest.view.player.challange.*">
+	<mx:Script>
+		<![CDATA[
+		
+		import mx.controls.Alert;
+		
+		import com.symphinity.questconquest.model.player.PlayerModel;
+		import com.symphinity.questconquest.model.player.PlayerModelLocator;
+		
+		protected var playerModel: PlayerModel;
+		
+		protected function previousChallange():void {
+			if ( ! PlayerModelLocator.getInstance().playerModel.moveToPreviousChallange())
+			{
+				Alert.show(" There is no Previous Challange to move to.");
+			} else 
+			{
+				challangeView.challangeModel = PlayerModelLocator.getInstance().playerModel.getCurrentChallange() ;
+			}
+		}	
+		
+		protected function nextChallange():void {
+			if (!PlayerModelLocator.getInstance().playerModel.moveToNextChallange())
+			{
+				Alert.show(" There is no Next Challange to move to.");
+			} else 
+			{
+				challangeView.challangeModel = PlayerModelLocator.getInstance().playerModel.getCurrentChallange() ;
+			}
+
+			
+			
+		}	
+		
+		
+		]]>
+	</mx:Script>
+		<mx:HBox>
+			<mx:Button id="previousChallangeButton" label="Previous" click="previousChallange();" />		
+			<mx:Button id="nextChallangeButton" label="Next" click="nextChallange();" />					
+		</mx:HBox>
+		<challange:ChallangeView id="challangeView" label="Challanges"  challangeModel="{PlayerModelLocator.getInstance().playerModel.getCurrentChallange()}" width="100%" height="100%" />
+	
+</mx:VBox>

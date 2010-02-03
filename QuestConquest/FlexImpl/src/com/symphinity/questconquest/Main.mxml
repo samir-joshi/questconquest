@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:qa="com.symphinity.questconquest.view.author.*" 
+	xmlns:qp="com.symphinity.questconquest.view.player.*" 
+	styleName="basic"
+	creationComplete="oncreationComplete();">
+<mx:Style source="default-style.css"/>		
+<mx:Script>
+	<![CDATA[
+	import com.symphinity.questconquest.model.FoundryModel;
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode
+	import flash.filesystem.FileStream;
+
+	import mx.controls.Alert;
+    import mx.events.MenuEvent;
+	
+	import com.adobe.serialization.json.JSON;
+	
+	import com.symphinity.questconquest.model.adventure.Adventure;
+	import com.symphinity.questconquest.model.world.World;
+	import com.symphinity.questconquest.model.FoundryModelLocator;		
+	import com.symphinity.questconquest.model.player.PlayerModelLocator;
+	import com.symphinity.questconquest.controller.QuestConquestController;
+	
+	import com.symphinity.questconquest.service.repository.ImageRepostitory;
+	import com.symphinity.questconquest.service.repository.RepositoryManager;
+		
+	[Bindable]
+	private var theController: QuestConquestController;
+	
+	private function oncreationComplete(): void {
+		theController = QuestConquestController.getInstance();
+	}
+
+	private function menuItemClicked(event: MenuEvent):void {
+		if ( "save_clicked" ==  String(event.item.@data)  ) {
+			save(event);
+		} else if ( "open_clicked" == String(event.item.@data)) {
+			open(event);
+		}
+		
+		
+	}	
+	
+	private function save(evt:MenuEvent):void {
+		trace("Save clicked!");
+		var adventure:Adventure = FoundryModelLocator.getInstance().foundryModel.adventure;
+		var world: World = FoundryModelLocator.getInstance().foundryModel.world;
+		var fnm:String = "saved.qst";
+		var file:File = File.desktopDirectory.resolvePath( fnm );
+		var stream:FileStream = new FileStream();
+		stream.open( file, FileMode.WRITE );
+		stream.writeObject( adventure );
+		stream.writeObject( world );
+		stream.close();
+	}
+
+	private function open(evt:MenuEvent):void {
+		trace("Open clicked!");
+		
+		var fnm:String = "saved.qst";
+		var file:File = File.desktopDirectory.resolvePath( fnm );
+		var stream:FileStream = new FileStream();
+		stream.open( file, FileMode.READ );
+		var adventure:* = stream.readObject() ;
+		var world:* = stream.readObject();
+		stream.close();
+		trace(" The First Object read is :" + adventure);
+		trace(" The Next Object read is :" + world);
+		
+		var foundryModel: FoundryModel = FoundryModelLocator.getInstance().foundryModel;
+		foundryModel.adventure = Adventure(adventure);
+		foundryModel.world = World(world);
+
+		RepositoryManager.load();
+		
+		trace(" worldInfo read from stream,rendered as JSON :" +  JSON.encode(world));
+		
+		PlayerModelLocator.getInstance().playerModel.setAdventure(Adventure(adventure));
+	}
+	
+	protected function switchToPlayerView():void {
+		viewStack.selectedChild = playerView;
+	}	
+	
+	protected function switchToAuthorView():void {
+		viewStack.selectedChild = authorView;
+	}	
+	
+	
+	]]>
+</mx:Script>	
+<mx:ApplicationControlBar dock="true"  paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0"  >
+        <mx:MenuBar id="myMenuBar" labelField="@label" width="100%" itemClick="menuItemClicked(event);" >
+            <mx:XMLList>
+                <menuitem label="File" >
+                    <menuitem label="New Trail" type="check"/>
+                    <menuitem label="Open Existing Trail..."  data="open_clicked"/>					
+                    <menuitem label="Save" data="save_clicked" />										
+                    <menuitem label="Save As..." type="check"/>															
+                    <menuitem label="Exit" type="check"/>
+                </menuitem>
+                <menuitem label="Edit" >
+                    <menuitem label="Add Question" type="check"/>
+                    <menuitem label="Add Fact" type="check"/>					
+                    <menuitem label="Rearrange" type="check"/>										
+                    <menuitem label="Delete" type="check"/>															
+                </menuitem>				
+                <menuitem label="Play"/>
+                <menuitem label="Help" >
+                    <menuitem label="About" type="check"/>
+                </menuitem>
+            </mx:XMLList>
+        </mx:MenuBar>
+    </mx:ApplicationControlBar>
+	<mx:Script>
+		<![CDATA[
+		
+		]]>
+	</mx:Script>
+	
+
+    <mx:ApplicationControlBar width="100%">
+        <mx:Button label="Create" color="0x000000" click="switchToAuthorView();" />
+        <mx:Button label="Play" color="0x000000" click="switchToPlayerView();" />		
+    </mx:ApplicationControlBar>
+	
+	<mx:ViewStack id="viewStack" width="100%" height="100%">
+		<qa:AuthorView id="authorView" width="100%" height="100%" />
+		<qp:PlayerView id="playerView" width="100%" height="100%" />
+	</mx:ViewStack>
+	
+
+</mx:WindowedApplication>

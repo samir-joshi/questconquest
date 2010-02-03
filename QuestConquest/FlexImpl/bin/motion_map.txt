@@ -1,0 +1,28 @@
+# 0 type:GraphicTile graphicClass:com.symphinity.questconquest.view.author.trail.MotionInMapTest_Tile01 xoffset:20 yoffset:10 walkable:true
+# 1 type:GraphicTile graphicClass:com.symphinity.questconquest.view.author.trail.MotionInMapTest_Tile02 xoffset:20 yoffset:30 walkable:false
+# 2 type:DrawnIsoBox color:0xff6666 walkable:false height:20
+# 3 type:DrawnIsoTile color:0x6666ff walkable:true
+# 4 type:GraphicTile graphicClass:com.symphinity.questconquest.view.author.trail.MotionInMapTest_Tile03 xoffset:20 yoffset:30 walkable:false
+# 5 type:GraphicTile graphicClass:com.symphinity.questconquest.view.author.trail.MotionInMapTest_Tile04 xoffset:55 yoffset:80 walkable:false
+0 0 0 0 5 0 0 0 0 0 0 0 0 0 1 1 1 1
+0 4 4 4 4 4 4 4 4 0 0 0 0 0 1 1 1 1
+0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1
+0 1 0 3 3 3 3 0 0 0 0 0 0 0 1 1 1 1
+0 1 0 3 2 2 3 0 5 0 0 0 0 0 1 1 1 1
+0 1 0 3 2 2 3 3 3 3 0 0 0 0 1 1 1 1
+0 1 0 3 3 3 3 0 0 0 0 0 0 0 1 1 1 1
+0 1 0 0 0 0 0 0 5 0 0 0 0 0 1 1 1 1
+0 1 1 1 1 1 1 1 1 0 0 0 0 0 1 1 1 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 5 0 0 0 0 0 0 0 0 0 1 1 1 1
+0 4 4 4 4 4 4 4 4 0 0 0 0 0 1 1 1 1
+0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1
+0 1 0 3 3 3 3 0 0 0 0 0 0 0 1 1 1 1
+0 1 0 3 2 2 3 0 5 0 0 0 0 0 1 1 1 1
+0 1 0 3 2 2 3 3 3 3 0 0 0 0 1 1 1 1
+0 1 0 3 3 3 3 0 0 0 0 0 0 0 1 1 1 1
+0 1 0 0 0 0 0 0 5 0 0 0 0 0 1 1 1 1
+0 1 1 1 1 1 1 1 1 0 0 0 0 0 1 1 1 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1

@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:trail="com.symphinity.questconquest.view.author.trail.*"
+	creationComplete="oncreationComplete();">
+
+	<mx:Script>
+		<![CDATA[
+		
+		import com.symphinity.questconquest.controller.FoundryController;
+		import flash.display.Bitmap;
+		import flash.filesystem.File;		
+		import mx.controls.Alert;
+		import mx.controls.Image;
+		import mx.events.IndexChangedEvent;
+		import mx.events.ListEvent;	
+		import mx.managers.PopUpManager;
+
+		import mx.collections.ArrayCollection;
+
+		import com.symphinity.questconquest.controller.QuestConquestController;
+		import com.symphinity.questconquest.model.adventure.Adventure;
+		import com.symphinity.questconquest.model.challange.Challange;
+		import com.symphinity.questconquest.model.FoundryModel;
+		import com.symphinity.questconquest.model.challange.TrueOrFalseChallangeType;		
+		import com.symphinity.questconquest.utils.FileUtils;
+		
+		[Bindable]
+		public var foundryModel: FoundryModel;	
+	
+		[Bindable]
+		protected var worldObjectCollection: ArrayCollection = new ArrayCollection();
+
+		[Bindable]		
+		protected var floorTileCollection: ArrayCollection = new ArrayCollection();
+		
+		private function oncreationComplete(): void {
+			worldObjectCollection.source = FileUtils.getFileNames("assets/world/object");
+			floorTileCollection.source = FileUtils.getFileNames("assets/world/tile");
+		}			
+		
+		protected function newTrail():void {
+			Alert.show(" To be added - functionality to add trail");
+		}
+		
+		protected function onListSelectionChange(event: ListEvent): void {
+			
+			Alert.show(" To be added - update trail view");		
+		}
+		
+		protected function OnSelectedGraphicTileChange(event: ListEvent): void {
+			
+			//TODO: Why know/bind to QuestConquestController and its internals here ?
+			// Should raise an event which interested listeners can interpret as appropriate
+			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
+			foundryController.setCurrentGraphicTile(  (event.itemRenderer as Image) );
+			
+		}
+		
+		protected function onObjectTypeChange(event: IndexChangedEvent): void {
+			
+			//TODO: Why know/bind to QuestConquestController and its internals here ?
+			// Should raise an event which interested listeners can interpret as appropriate
+			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
+			
+			switch(objectShowcase.getChildAt(event.newIndex)  )
+			{
+				case floorTiles:
+					foundryController.setcurrentWorldObjectType( foundryController.TILE );
+					break;
+				case worldObjects:
+					foundryController.setcurrentWorldObjectType( foundryController.WORLD_OBJECT );
+					break;
+				case factoids:
+					foundryController.setcurrentWorldObjectType( foundryController.FACTOID );
+					break;
+				case challanges:
+					foundryController.setcurrentWorldObjectType( foundryController.CHALANGE );
+					break;
+					
+			}
+		}
+
+		
+	
+		
+		]]>
+	</mx:Script>
+		
+	<mx:HDividedBox width="100%" height="100%" >
+		
+		<!--
+			//TODO: The trail list and viewer are at same level of abstraction.
+			To maintain the symmetry, abstract the trail list functionality to a separate component.
+		-->
+		
+		<mx:VBox width="20%" height="100%" >
+			<mx:HBox>
+				<mx:Button id="newTrailButton" label="New Trail" click="newTrail();" />
+			</mx:HBox>
+			<mx:List id="trailList" width="100%" height="100%"  dataProvider="{foundryModel.adventure.getTrailSet()}"
+						 change="onListSelectionChange(event)" selectedItem="{foundryModel.currentTrail}">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:HBox>
+							<mx:Label text="{data.title}" />
+						</mx:HBox>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:List>
+		</mx:VBox>
+		<mx:Panel width="20%" height="100%" title="World Building Blocks" >
+			<mx:Accordion id="objectShowcase" color="0x323232" width="100%" height="100%" change="onObjectTypeChange(event)">
+				<!-- Define each panel using a VBox container. -->
+				<mx:VBox id="floorTiles" label="Floor Tiles">
+					<mx:List id="tileList" paddingTop="5" paddingLeft="5" paddingRight="5" rowHeight="30" width="100%"  height="100%"
+						change="OnSelectedGraphicTileChange(event)" 
+						itemRenderer="mx.controls.Image" 
+						dataProvider="{floorTileCollection}" 
+						variableRowHeight="true">
+					</mx:List>				
+				</mx:VBox>
+				
+				<mx:VBox id="worldObjects" label="World Objects">
+					<mx:List id="objectList" paddingTop="5" paddingLeft="5" paddingRight="5"  rowHeight="30" width="100%"  height="100%"
+						change="OnSelectedGraphicTileChange(event)"
+						itemRenderer="mx.controls.Image" 
+						dataProvider="{worldObjectCollection}" 
+						variableRowHeight="true">
+					</mx:List>				
+				</mx:VBox>						
+
+				<mx:VBox id="factoids" label="Factoids">
+					<mx:Label text="Accordion container panel 3"/>
+				</mx:VBox>
+				
+				<mx:VBox id="challanges" label="Challanges">
+					<mx:Label text="Accordion container panel 3"/>
+				</mx:VBox>
+				
+			</mx:Accordion>
+		</mx:Panel>
+		
+		<mx:VBox width="60%" height="100%" >
+			<trail:TrailView id="trailView" trailModel="{foundryModel.currentTrail}" width="100%" height="100%" />
+		</mx:VBox>
+	</mx:HDividedBox>
+</mx:VBox>
