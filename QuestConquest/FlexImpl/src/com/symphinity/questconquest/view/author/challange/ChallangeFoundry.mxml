@@ -4,7 +4,9 @@
 
 	<mx:Script>
 		<![CDATA[
-		import com.symphinity.questconquest.model.challange.TrueOrFalseChallangeType;
+		
+		import mx.controls.Alert;
+		import mx.events.CloseEvent;
 		import mx.events.ListEvent;	
 		import mx.managers.PopUpManager;
 			
@@ -13,6 +15,7 @@
 		import com.symphinity.questconquest.model.FoundryModel;
 		
 		import com.symphinity.questconquest.view.author.challange.ChallangeTypeSelector;
+		import com.symphinity.questconquest.model.challange.TrueOrFalseChallangeType;		
 		
 		[Bindable]
 		public var foundryModel: FoundryModel;		
@@ -20,6 +23,38 @@
 		protected function newChallange():void {
 			var typeSelector:ChallangeTypeSelector = ChallangeTypeSelector(PopUpManager.createPopUp( this, ChallangeTypeSelector , true));
 		}
+		
+		protected function confirmRemoveChallange():void {
+			Alert.show("Are you sure to remove the currently selected challange ? ", "Confirm removal", Alert.YES + Alert.NO, null, challangeRemovalAlertHandler);
+		}
+		
+		protected function challangeRemovalAlertHandler(event: CloseEvent):void 
+		{
+			if (event.detail == Alert.YES)
+			{
+				var challange: Challange = foundryModel.currentChallange;
+				if (challange == null)
+				{
+					Alert.show("Please select a challange to be removed from the list and try again.");
+				}
+				else {
+					removeChallange(challange);			
+				}
+			}
+			
+				
+		}		
+		
+		protected function removeChallange(challange: Challange):void 
+		{
+			var itemIndex: int = foundryModel.adventure.getChallangeSet().getItemIndex(challange);
+			if ( itemIndex >= 0)
+			{
+				foundryModel.adventure.getChallangeSet().removeItemAt(itemIndex);
+			}
+			
+		}
+		
 		
 		protected function onListSelectionChange(event: ListEvent): void {
 			
@@ -39,7 +74,8 @@
 		
 		<mx:VBox width="30%" height="100%" >
 			<mx:HBox>
-				<mx:Button id="newChallangeButton" label="New Challange" click="newChallange();" />
+				<mx:Button id="newChallangeButton" label="Add New" click="newChallange();" />
+				<mx:Button id="removeChallangeButton" label="Remove" click="confirmRemoveChallange();" />				
 			</mx:HBox>
 			<mx:List id="challangeList" width="100%" height="100%"  dataProvider="{foundryModel.adventure.getChallangeSet()}"
 						 change="onListSelectionChange(event)" selectedItem="{foundryModel.currentChallange}">
