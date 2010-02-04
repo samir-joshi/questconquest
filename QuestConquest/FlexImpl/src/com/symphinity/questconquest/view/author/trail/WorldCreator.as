@@ -208,7 +208,11 @@ package com.symphinity.questconquest.view.author.trail
 			if (dragModeOn)
 			{
 				dragModeOn = false;
-				addMultipleTilesToWorld();
+				var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
+				if (foundryController.getcurrentWorldObjectType() == foundryController.TILE && foundryController.getCurrentGrahicTile() != null)
+				{
+					addMultipleTilesToWorld();	
+				}
 				worldDisplay.removeChild(regionOutlineRect);
 				this.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			}
