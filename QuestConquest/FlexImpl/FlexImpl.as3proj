@@ -46,6 +46,7 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="lib\Cairngorm.swc" />
+    <element path="lib\as3corelib.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
