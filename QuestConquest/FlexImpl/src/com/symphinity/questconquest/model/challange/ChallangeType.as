@@ -12,10 +12,6 @@
 	{
 		public  var type: String;
 		
-		//Locale specific data
-		public var displayName: String;		
-		public var description: String;
-		
 		protected var _data: Object;
 		
 		public function ChallangeType() 
@@ -31,6 +27,10 @@
 			_data = argData;
 		}
 		
+		public function toString(): String
+		{
+			return type;
+		}
 		
 	}
 	
