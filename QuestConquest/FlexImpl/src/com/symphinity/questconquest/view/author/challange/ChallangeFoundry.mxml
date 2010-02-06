@@ -24,7 +24,8 @@
 			var typeSelector:ChallangeTypeSelector = ChallangeTypeSelector(PopUpManager.createPopUp( this, ChallangeTypeSelector , true));
 		}
 		
-		protected function confirmRemoveChallange():void {
+		protected function confirmRemoveChallange():void 
+		{
 			Alert.show("Are you sure to remove the currently selected challange ? ", "Confirm removal", Alert.YES + Alert.NO, null, challangeRemovalAlertHandler);
 		}
 		
@@ -41,8 +42,6 @@
 					removeChallange(challange);			
 				}
 			}
-			
-				
 		}		
 		
 		protected function removeChallange(challange: Challange):void 
@@ -56,8 +55,8 @@
 		}
 		
 		
-		protected function onListSelectionChange(event: ListEvent): void {
-			
+		protected function onListSelectionChange(event: ListEvent): void 
+		{
 			foundryModel.updateCurrentChallangeFromIndex(event.rowIndex);
 			challangeView.challangeModel = Challange(foundryModel.adventure.getChallangeSet().getItemAt(event.rowIndex));
 		}
