@@ -8,6 +8,7 @@
 		
 		import com.symphinity.questconquest.controller.FoundryController;
 		import flash.display.Bitmap;
+		import flash.events.Event;
 		import flash.filesystem.File;		
 		import mx.controls.Alert;
 		import mx.controls.Image;
@@ -80,8 +81,22 @@
 			}
 		}
 
+		public function setEditMode(event: Event): void
+		{
+			//TODO: Why know/bind to QuestConquestController and its internals here ?
+			// Should raise an event which interested listeners can interpret as appropriate
+			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
+			
+			if (event.target.selected)
+			{
+				foundryController.setEditMode(true );
+				trace("Edit mode set to true");
+			}else {
+				foundryController.setEditMode(false);
+				trace("Edit mode set to false");
+			}
+		}
 		
-	
 		
 		]]>
 	</mx:Script>
@@ -109,6 +124,9 @@
 			</mx:List>
 		</mx:VBox>
 		<mx:Panel width="20%" height="100%" title="World Building Blocks" >
+			<mx:HBox>
+				<mx:Button id="editModeButton" click="setEditMode(event)" toggle="true" selected="true" />
+			</mx:HBox>
 			<mx:Accordion id="objectShowcase" color="0x323232" width="100%" height="100%" change="onObjectTypeChange(event)">
 				<!-- Define each panel using a VBox container. -->
 				<mx:VBox id="floorTiles" label="Floor Tiles">
@@ -136,7 +154,6 @@
 				<mx:VBox id="challanges" label="Challanges">
 					<mx:Label text="Accordion container panel 3"/>
 				</mx:VBox>
-				
 			</mx:Accordion>
 		</mx:Panel>
 		

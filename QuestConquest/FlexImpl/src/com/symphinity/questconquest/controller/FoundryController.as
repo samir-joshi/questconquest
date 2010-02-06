@@ -27,8 +27,14 @@
 		
 		protected var challangeSet:ArrayCollection;
 		
+		protected var editMode: Boolean;
+		
 		public function FoundryController() 
 		{
+			
+			//Bad (because it is assumption about intial UI state) hack, remove soon 
+			currentWorldObjectType = TILE;
+			
 		}
 		
 		internal function setAdventure(anAdventure:Adventure):void {
@@ -61,6 +67,16 @@
 			currentWorldObjectType = objectType;
 			trace(" Updated object type: " + objectType);
 			
+		}
+		
+		public function setEditMode(mode: Boolean): void
+		{
+			editMode = mode;
+		}
+		
+		public function getEditMode(): Boolean
+		{
+			return editMode;
 		}
 
 		

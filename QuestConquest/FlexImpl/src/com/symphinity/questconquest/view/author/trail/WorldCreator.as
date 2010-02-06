@@ -108,14 +108,20 @@ package com.symphinity.questconquest.view.author.trail
 		
 		protected function onWorldClick(event:MouseEvent):void
 		{
+			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
 			var pos:Point3D = IsoUtils.screenToIso(new Point(worldDisplay.mouseX, worldDisplay.mouseY));
 			
 			var xTileIndex:int = getXTileIndex(pos);
 			var zTileIndex:int = getZTileIndex(pos);
 			
+			if (foundryController.getEditMode() == true)
+			{
+				editTile(xTileIndex, zTileIndex);
+				return;
+			}
+			
 			pos = roundPointToTileCorner(pos);
 			
-			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
 			var tileImage: Image = QuestConquestController.getInstance().getFoundryController().getCurrentGrahicTile();
 			if (tileImage != null) {
 
@@ -403,6 +409,18 @@ package com.symphinity.questconquest.view.author.trail
 				box.z += box.vz;
 			}
 			worldDisplay.sort();
+		}
+		
+		protected function editTile(xTileIndex: int, zTileIndex: int): void 
+		{
+			var startPoint3d: Point3D = new Point3D(xTileIndex * world.tileLength, 0, zTileIndex * world.tileDepth );
+			var startPoint: Point = IsoUtils.isoToScreen(startPoint3d);			
+			regionOutlineRect.setStartPoint(new Point(startPoint.x, startPoint.y - world.tileDepth/2 ));
+			regionOutlineRect.setEndPoint( new Point(startPoint.x,  startPoint.y + world.tileDepth/2 ));
+			regionOutlineRect.render();
+			worldDisplay.addChild(regionOutlineRect);
+
+			
 		}
 		
 	}
