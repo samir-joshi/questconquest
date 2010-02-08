@@ -74,6 +74,7 @@ package com.symphinity.questconquest.model.isometric
 		
 		public function addChildToWorld(child:IsoObject):void
 		{
+			child.walkable = false;
 			_world.addChild(child);
 			_objects.push(child);
 			sort();
