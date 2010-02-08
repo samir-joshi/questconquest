@@ -1,7 +1,6 @@
 package com.symphinity.questconquest.view.author.trail
 {
 	
-	import com.symphinity.questconquest.controller.FoundryController;
 	import com.symphinity.questconquest.model.isometric.GraphicTile;
 	import com.symphinity.questconquest.model.isometric.GraphicTileEx;
 	import com.symphinity.questconquest.model.world.BitmapInfo;
@@ -29,8 +28,6 @@ package com.symphinity.questconquest.view.author.trail
 	
 	import com.adobe.serialization.json.JSON;
 	
-	import com.symphinity.questconquest.controller.QuestConquestController;
-	
 	import com.symphinity.questconquest.model.FoundryModelLocator;
 	import com.symphinity.questconquest.model.isometric.DrawnIsoBox;
 	import com.symphinity.questconquest.model.isometric.DrawnIsoTile;
@@ -39,10 +36,13 @@ package com.symphinity.questconquest.view.author.trail
 	import com.symphinity.questconquest.model.isometric.IsoUtils;
 	import com.symphinity.questconquest.service.repository.ImageRepostitory;
 	import com.symphinity.questconquest.service.repository.RepositoryManager;
+	import com.symphinity.questconquest.controller.author.world.WorldPresenter;
 
 	[SWF(backgroundColor=0xffffff)]
 	public class WorldCreator extends UIComponent
 	{
+		protected var worldPresenter: WorldPresenter;
+		
 		protected var worldDisplay:IsoWorld;
 		
 		protected var world: World;
@@ -57,7 +57,6 @@ package com.symphinity.questconquest.view.author.trail
 		
 		public function WorldCreator()
 		{
-			
 			world = FoundryModelLocator.getInstance().foundryModel.world;
 			
 			worldDisplay = new IsoWorld();
@@ -84,6 +83,12 @@ package com.symphinity.questconquest.view.author.trail
 			worldDisplay.contextMenu = customContextMenu;
 			
 		}
+		
+		public function setPresenter(presenter: WorldPresenter): void
+		{
+			worldPresenter = presenter;
+		}
+		
 		
 		public function setupInteractivity():void 
 		{
@@ -121,13 +126,12 @@ package com.symphinity.questconquest.view.author.trail
 		
 		protected function onWorldClick(event:MouseEvent):void
 		{
-			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
 			var pos:Point3D = IsoUtils.screenToIso(new Point(worldDisplay.mouseX, worldDisplay.mouseY));
 			
 			var xTileIndex:int = getXTileIndex(pos);
 			var zTileIndex:int = getZTileIndex(pos);
 			
-			if (foundryController.getEditMode() == true)
+			if (worldPresenter.getEditMode() == true)
 			{
 				editTile(xTileIndex, zTileIndex);
 				return;
@@ -135,7 +139,7 @@ package com.symphinity.questconquest.view.author.trail
 			
 			pos = roundPointToTileCorner(pos);
 			
-			var tileImage: Image = QuestConquestController.getInstance().getFoundryController().getCurrentGrahicTile();
+			var tileImage: Image = worldPresenter.getCurrentGrahicTile();
 			if (tileImage != null) {
 
 				var tile:GraphicTile;
@@ -144,7 +148,7 @@ package com.symphinity.questconquest.view.author.trail
 				tileInfo = new Tile();
 				tileInfo.bitmapInfo  =  new BitmapInfo();
 				
-				if (foundryController.getcurrentWorldObjectType() == foundryController.TILE )
+				if (worldPresenter.getcurrentWorldObjectType() == worldPresenter.TILE )
 				{
 					tile = new GraphicTile(worldDisplay.tileLength, tileImage, 20, 10);				
 					tile.position = pos;
@@ -158,7 +162,7 @@ package com.symphinity.questconquest.view.author.trail
 
 					addTileToWorld(xTileIndex, zTileIndex, tileInfo);
 				
-				}else if (foundryController.getcurrentWorldObjectType() == foundryController.WORLD_OBJECT )
+				}else if (worldPresenter.getcurrentWorldObjectType() == worldPresenter.WORLD_OBJECT )
 				{
 					tile = new GraphicTile(worldDisplay.tileLength, tileImage, 20, 30);				
 					tile.position = pos;					
@@ -227,8 +231,7 @@ package com.symphinity.questconquest.view.author.trail
 			if ( dragModeOn)
 			{
 				dragModeOn = false;
-				var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
-				if (foundryController.getcurrentWorldObjectType() == foundryController.TILE && foundryController.getCurrentGrahicTile() != null)
+				if (worldPresenter.getcurrentWorldObjectType() == worldPresenter.TILE && worldPresenter.getCurrentGrahicTile() != null)
 				{
 					addMultipleTilesToWorld();	
 				}
@@ -266,7 +269,7 @@ package com.symphinity.questconquest.view.author.trail
 			oppositeCornerPoint3D.z = endPoint3D.z ;
 			var oppositeCornerPoint: Point = IsoUtils.isoToScreen(oppositeCornerPoint3D);
 
-			var currentTile: Image =  QuestConquestController.getInstance().getFoundryController().getCurrentGrahicTile();
+			var currentTile: Image =  worldPresenter.getCurrentGrahicTile();
 			var tileBitmap: Bitmap = currentTile.content as Bitmap;
 			
 			for(var i:int = 0; i < worldDisplay.worldLength; i++)

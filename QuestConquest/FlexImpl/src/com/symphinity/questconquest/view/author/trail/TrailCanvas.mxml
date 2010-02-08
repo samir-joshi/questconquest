@@ -5,6 +5,7 @@
 		    >
 	<mx:Script>
 	<![CDATA[
+		import com.symphinity.questconquest.controller.author.world.WorldPresenter;
 		import com.symphinity.questconquest.model.isometric.DrawnIsoTile;
 		import com.symphinity.questconquest.model.isometric.Point3D;
 		import com.symphinity.questconquest.model.isometric.ExtendedUICompoent;
@@ -15,10 +16,17 @@
 		
 		private var worldCreator:WorldCreator;
 		
+		public var worldPresenter: WorldPresenter;
 		
+		
+		public function setPresenter(presenter: WorldPresenter): void
+		{
+			worldPresenter = presenter;
+			worldCreator.setPresenter(presenter);
+		}
 		
 		protected function OnCreationComplete(): void {
-			
+
 			worldCreator = new WorldCreator();
 			addChild(worldCreator);
 			worldCreator.setupInteractivity();

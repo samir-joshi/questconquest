@@ -24,6 +24,10 @@
 		import com.symphinity.questconquest.model.FoundryModel;
 		import com.symphinity.questconquest.model.challange.TrueOrFalseChallangeType;		
 		import com.symphinity.questconquest.utils.FileUtils;
+		import com.symphinity.questconquest.controller.author.world.WorldPresenter;
+		
+		[Bindable]
+		public var worldPresenter: WorldPresenter;
 		
 		[Bindable]
 		public var foundryModel: FoundryModel;	
@@ -35,6 +39,8 @@
 		protected var floorTileCollection: ArrayCollection = new ArrayCollection();
 		
 		private function oncreationComplete(): void {
+			worldPresenter = new WorldPresenter();
+			trailView.setPresenter(worldPresenter);
 			worldObjectCollection.source = FileUtils.getFileNames("assets/world/object");
 			floorTileCollection.source = FileUtils.getFileNames("assets/world/tile");
 		}			
@@ -52,8 +58,7 @@
 			
 			//TODO: Why know/bind to QuestConquestController and its internals here ?
 			// Should raise an event which interested listeners can interpret as appropriate
-			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
-			foundryController.setCurrentGraphicTile(  (event.itemRenderer as Image) );
+			worldPresenter.setCurrentGraphicTile(  (event.itemRenderer as Image) );
 			
 		}
 		
@@ -61,21 +66,21 @@
 			
 			//TODO: Why know/bind to QuestConquestController and its internals here ?
 			// Should raise an event which interested listeners can interpret as appropriate
-			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
+			//var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
 			
 			switch(objectShowcase.getChildAt(event.newIndex)  )
 			{
 				case floorTiles:
-					foundryController.setcurrentWorldObjectType( foundryController.TILE );
+					worldPresenter.setcurrentWorldObjectType( worldPresenter.TILE );
 					break;
 				case worldObjects:
-					foundryController.setcurrentWorldObjectType( foundryController.WORLD_OBJECT );
+					worldPresenter.setcurrentWorldObjectType( worldPresenter.WORLD_OBJECT );
 					break;
 				case factoids:
-					foundryController.setcurrentWorldObjectType( foundryController.FACTOID );
+					worldPresenter.setcurrentWorldObjectType( worldPresenter.FACTOID );
 					break;
 				case challanges:
-					foundryController.setcurrentWorldObjectType( foundryController.CHALANGE );
+					worldPresenter.setcurrentWorldObjectType( worldPresenter.CHALANGE );
 					break;
 					
 			}
@@ -85,14 +90,14 @@
 		{
 			//TODO: Why know/bind to QuestConquestController and its internals here ?
 			// Should raise an event which interested listeners can interpret as appropriate
-			var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
+			//var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
 			
 			if (event.target.selected)
 			{
-				foundryController.setEditMode(true );
+				worldPresenter.setEditMode(true );
 				trace("Edit mode set to true");
 			}else {
-				foundryController.setEditMode(false);
+				worldPresenter.setEditMode(false);
 				trace("Edit mode set to false");
 			}
 		}
@@ -167,7 +172,7 @@
 		</mx:Panel>
 		
 		<mx:VBox width="60%" height="100%" >
-			<trail:TrailView id="trailView" trailModel="{foundryModel.currentTrail}" width="100%" height="100%" />
+			<trail:TrailCanvas id="trailView" width="100%" height="100%"  worldPresenter="{worldPresenter}" />
 		</mx:VBox>
 	</mx:HDividedBox>
 </mx:VBox>
