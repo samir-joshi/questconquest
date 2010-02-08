@@ -21,6 +21,10 @@ package com.symphinity.questconquest.view.author.trail
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;	
 	
+	import flash.events.ContextMenuEvent;
+	import flash.ui.ContextMenu;
+	import flash.ui.ContextMenuItem;
+	
 	import mx.core.UIComponent;
 	
 	import com.adobe.serialization.json.JSON;
@@ -68,9 +72,18 @@ package com.symphinity.questconquest.view.author.trail
 			addEventListener(MouseEvent.CLICK, onWorldClick);
 			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+
+			var customContextMenu:ContextMenu = new ContextMenu();
+			var menuItem:ContextMenuItem = new ContextMenuItem("Delete");
+			menuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,removeTile);
+
+			//hide the Flash menu
+			customContextMenu.hideBuiltInItems();
+			customContextMenu.customItems.push(menuItem);
+
+			worldDisplay.contextMenu = customContextMenu;
 			
 		}
-		
 		
 		public function setupInteractivity():void 
 		{
@@ -211,7 +224,7 @@ package com.symphinity.questconquest.view.author.trail
 
 		protected function onMouseUp(event:MouseEvent):void
 		{
-			if (dragModeOn)
+			if ( dragModeOn)
 			{
 				dragModeOn = false;
 				var foundryController: FoundryController = QuestConquestController.getInstance().getFoundryController();
@@ -419,9 +432,24 @@ package com.symphinity.questconquest.view.author.trail
 			regionOutlineRect.setEndPoint( new Point(startPoint.x,  startPoint.y + world.tileDepth/2 ));
 			regionOutlineRect.render();
 			worldDisplay.addChild(regionOutlineRect);
-
+		}
+		
+		protected function removeTile(event: ContextMenuEvent): void
+		{
+			trace("To be implemented - remove Tile");
+			var pos:Point3D = IsoUtils.screenToIso(new Point(worldDisplay.mouseX, worldDisplay.mouseY));
+			
+			var xTileIndex:int = getXTileIndex(pos);
+			var zTileIndex:int = getZTileIndex(pos);
+			worldDisplay.removeFloorChildAt(world.worldDepth * xTileIndex + zTileIndex);
+			//TODO
+			// Add drawnTile in place of the removed tile ?
+			world.tiles[xTileIndex][zTileIndex] = null;
+			
+			
 			
 		}
+				
 		
 	}
 }
