@@ -81,6 +81,8 @@
 	}
 	
 	protected function switchToPlayerView():void {
+		var foundryModel: FoundryModel = FoundryModelLocator.getInstance().foundryModel;
+		PlayerModelLocator.getInstance().playerModel.setAdventure( foundryModel.adventure);
 		viewStack.selectedChild = playerView;
 	}	
 	
