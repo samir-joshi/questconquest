@@ -11,7 +11,10 @@
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode
 	import flash.filesystem.FileStream;
+	import flash.net.FileFilter;
 
+	import flash.events.Event;
+	
 	import mx.controls.Alert;
     import mx.events.MenuEvent;
 	
@@ -39,30 +42,36 @@
 		} else if ( "open_clicked" == String(event.item.@data)) {
 			open(event);
 		}
-		
-		
 	}	
 	
 	private function save(evt:MenuEvent):void {
-		trace("Save clicked!");
+		var fnm:String = "saved.qst";
+		var file:File = File.applicationStorageDirectory;
+		file.browseForSave(" Save the current Adventure");
+		file.addEventListener(Event.SELECT, saveSelectedFile);
+	}
+
+	private function saveSelectedFile(event: Event): void {
 		var adventure:Adventure = FoundryModelLocator.getInstance().foundryModel.adventure;
 		var world: World = FoundryModelLocator.getInstance().foundryModel.world;
-		var fnm:String = "saved.qst";
-		var file:File = File.desktopDirectory.resolvePath( fnm );
 		var stream:FileStream = new FileStream();
-		stream.open( file, FileMode.WRITE );
+		stream.open( File(event.target), FileMode.WRITE );
 		stream.writeObject( adventure );
 		stream.writeObject( world );
 		stream.close();
 	}
-
+	
 	private function open(evt:MenuEvent):void {
 		trace("Open clicked!");
-		
-		var fnm:String = "saved.qst";
-		var file:File = File.desktopDirectory.resolvePath( fnm );
+		var file:File = File.applicationStorageDirectory;
+		file.browseForOpen("Open QuestConquest Adventure", [ new FileFilter("QuestConquest", "*.qst")]);
+		file.addEventListener(Event.SELECT, openSelectedFile);
+	}
+	
+	private function openSelectedFile(event:Event):void 
+	{
 		var stream:FileStream = new FileStream();
-		stream.open( file, FileMode.READ );
+		stream.open( File(event.target), FileMode.READ );
 		var adventure:* = stream.readObject() ;
 		var world:* = stream.readObject();
 		stream.close();
@@ -78,7 +87,7 @@
 		trace(" worldInfo read from stream,rendered as JSON :" +  JSON.encode(world));
 		
 		PlayerModelLocator.getInstance().playerModel.setAdventure(Adventure(adventure));
-	}
+}	
 	
 	protected function switchToPlayerView():void {
 		var foundryModel: FoundryModel = FoundryModelLocator.getInstance().foundryModel;
